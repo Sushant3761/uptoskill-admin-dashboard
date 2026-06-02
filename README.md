@@ -193,7 +193,7 @@ Explore the fully operational deployment here:
 
 Source files, audit reviews, and modular layouts are accessible at:
 
-🔗 **[GitHub Repository — uptoskill-admin-dashboard](https://github.com/sushantsingh/uptoskill-admin-dashboard.git)**
+🔗 **[GitHub Repository — uptoskill-admin-dashboard]([https://github.com/Sushant3761/uptoskill-admin-dashboard])**
 
 ---
 
@@ -210,5 +210,5 @@ Source files, audit reviews, and modular layouts are accessible at:
 
 **Sushant Singh**
 *Frontend Software Engineer*
-- **Portfolio**: [Sushant Singh Portfolios](https://github.com/sushantsingh)
+- **Portfolio**: [Sushant Singh Portfolios](https://github.com/)
 - **LinkedIn**: [Sushant Singh LinkedIn](https://www.linkedin.com)
