@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Internship Admin Panel - Design System</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/global.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/dashboard.css">
+</head>
+<body>
+
+  <div class="admin-shell">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-icon">
+          <i class="fa-solid fa-layer-group"></i>
+        </div>
+        <div class="brand-name">UptoSkill Admin</div>
+      </div>
+      
+      <ul class="sidebar-menu">
+        <li>
+          <a href="#" class="sidebar-nav-item active" data-target="showcase">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span>Design Tokens</span>
+            <span class="badge badge-primary ml-auto">Core</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="sidebar-nav-item" data-target="catalog">
+            <i class="fa-solid fa-cubes"></i>
+            <span>Component Catalog</span>
+          </a>
+        </li>
+      </ul>
+      
+      <div class="sidebar-footer">
+        <div>Admin Dashboard</div>
+        <div class="mt-2xs" style="opacity: 0.5;">v1.0.0</div>
+      </div>
+    </aside>
+
+    <main class="main-wrapper">
+      <header class="main-header">
+        <div class="header-meta">
+          <h2 class="h3-premium text-color-primary">Admin System Console</h2>
+          <span style="color: var(--text-tertiary); font-size: var(--font-size-xs);">|</span>
+          <span style="color: var(--text-secondary); font-size: var(--font-size-sm); font-weight: var(--font-weight-medium);">Design System</span>
+        </div>
+        
+        <div class="header-actions">
+          <button id="theme-toggle" class="btn btn-outline btn-sm">
+            <i class="fas fa-moon"></i>
+            <span>Dark Mode</span>
+          </button>
+          
+          <div class="user-profile">
+            <div class="avatar">US</div>
+            <div class="d-flex flex-col ml-xs">
+              <span style="font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); color: var(--text-primary); line-height: var(--line-height-none);">Intern Suite</span>
+              <span style="font-size: var(--font-size-xs); color: var(--text-tertiary); margin-top: 2px;">Administrator</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="content-body">
+        
+        <section id="showcase" class="dashboard-section active">
+          <div class="card p-lg">
+            <h3 class="h3-premium">Design System Sandbox</h3>
+            <p class="mt-xs text-color-secondary font-regular" style="font-size: var(--font-size-sm);">
+              Centralized Design Tokens are CSS variables located in <code>tokens.css</code>. 
+              They act as the single source of truth across the codebase, ensuring styling consistency and light/dark theme adaptivity.
+            </p>
+            
+            <div class="search-container mt-lg">
+              <input type="text" id="token-search-input" class="input-base" placeholder="Search tokens... (e.g. primary, radius, space, font)">
+            </div>
+          </div>
+
+          <div class="showcase-grid">
+            
+            <div class="card token-showcase-item" data-token-name="Colors Palette Core Primary Secondary Brand Success Warning Danger" data-token-description="Core brand palettes including Indigo and Purple scales along with semantic success, danger, warning and neutrals.">
+              <h4 class="h4-premium">1. HSL Theme Colors</h4>
+              <p class="text-color-secondary font-regular mt-2xs" style="font-size: var(--font-size-xs);">Core color palettes designed for visual harmony and contrast.</p>
+              
+              <div class="mt-md">
+                <h5 class="h6-premium">Primary</h5>
+                <div class="color-preview-container">
+                  <div class="color-swatch-item">
+                    <div class="swatch-circle" style="background-color: var(--primary-100);"></div>
+                    <span class="swatch-name">100</span>
+                  </div>
+                  <div class="color-swatch-item">
+                    <div class="swatch-circle" style="background-color: var(--primary-300);"></div>
+                    <span class="swatch-name">300</span>
+                  </div>
+                  <div class="color-swatch-item">
+                    <div class="swatch-circle" style="background-color: var(--primary-500);"></div>
+                    <span class="swatch-name">500</span>
+                  </div>
+                  <div class="color-swatch-item">
+                    <div class="swatch-circle" style="background-color: var(--primary-700);"></div>
+                    <span class="swatch-name">700</span>
+                  </div>
+                  <div class="color-swatch-item">
+                    <div class="swatch-circle" style="background-color: var(--primary-900);"></div>
+                    <span class="swatch-name">900</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-md">
+                <h5 class="h6-premium">Secondary</h5>
+                <div class="color-preview-container">
+                  <div class="color-swatch-item">
+                    <div class="swatch-circle" style="background-color: var(--secondary-100);"></div>
+                    <span class="swatch-name">100</span>
+                  </div>
+                  <div class="color-swatch-item">
+                    <div class="swatch-circle" style="background-color: var(--secondary-300);"></div>
+                    <span class="swatch-name">300</span>
+                  </div>
+                  <div class="color-swatch-item">
+                    <div class="swatch-circle" style="background-color: var(--secondary-500);"></div>
+                    <span class="swatch-name">500</span>
+                  </div>
+                  <div class="color-swatch-item">
+                    <div class="swatch-circle" style="background-color: var(--secondary-700);"></div>
+                    <span class="swatch-name">700</span>
+                  </div>
+                  <div class="color-swatch-item">
+                    <div class="swatch-circle" style="background-color: var(--secondary-900);"></div>
+                    <span class="swatch-name">900</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-md">
+                <h5 class="h6-premium">Semantic Utilities</h5>
+                <div class="color-preview-container">
+                  <div class="color-swatch-item">
+                    <div class="swatch-circle" style="background-color: var(--success-500);"></div>
+                    <span class="swatch-name">Success</span>
+                  </div>
+                  <div class="color-swatch-item">
+                    <div class="swatch-circle" style="background-color: var(--warning-500);"></div>
+                    <span class="swatch-name">Warning</span>
+                  </div>
+                  <div class="color-swatch-item">
+                    <div class="swatch-circle" style="background-color: var(--danger-500);"></div>
+                    <span class="swatch-name">Danger</span>
+                  </div>
+                  <div class="color-swatch-item">
+                    <div class="swatch-circle" style="background-color: var(--neutral-400);"></div>
+                    <span class="swatch-name">Neutral</span>
+                  </div>
+                  <div class="color-swatch-item">
+                    <div class="swatch-circle" style="background-color: var(--neutral-800);"></div>
+                    <span class="swatch-name">Slate</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card token-showcase-item" data-token-name="Typography Size Fonts Heading Weight Line-height" data-token-description="Consistent typography systems matching size multipliers from Outfitters scale and standardized weights.">
+              <h4 class="h4-premium">2. Typography Scale</h4>
+              <p class="text-color-secondary font-regular mt-2xs" style="font-size: var(--font-size-xs);">Systematic font sizes, weights, and hierarchies.</p>
+              
+              <div class="typo-showcase-list mt-md">
+                <div class="typo-item">
+                  <span class="typo-label">h1 --4xl</span>
+                  <span class="h1-premium" style="font-size: var(--font-size-2xl);">Heading 4XL</span>
+                </div>
+                <div class="typo-item">
+                  <span class="typo-label">h3 --2xl</span>
+                  <span class="h3-premium" style="font-size: var(--font-size-xl);">Heading 2XL</span>
+                </div>
+                <div class="typo-item">
+                  <span class="typo-label">Base font</span>
+                  <span style="font-size: var(--font-size-base); font-weight: var(--font-weight-regular);">Base Regular 16px</span>
+                </div>
+                <div class="typo-item">
+                  <span class="typo-label">Small --sm</span>
+                  <span style="font-size: var(--font-size-sm); font-weight: var(--font-weight-medium);">Small Medium 14px</span>
+                </div>
+                <div class="typo-item">
+                  <span class="typo-label">Weights scale</span>
+                  <div class="d-flex gap-xs" style="font-size: var(--font-size-sm);">
+                    <span class="font-light">Light</span>
+                    <span class="font-regular">Regular</span>
+                    <span class="font-medium">Medium</span>
+                    <span class="font-semibold">Semibold</span>
+                    <span class="font-bold">Bold</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card token-showcase-item" data-token-name="Spacing Scale Gap Padding Margin Size" data-token-description="Proportional layout spacing constants: 4px, 8px, 12px, 16px, 24px, 32px, 48px scale.">
+              <h4 class="h4-premium">3. Spacing Scale</h4>
+              <p class="text-color-secondary font-regular mt-2xs" style="font-size: var(--font-size-xs);">Strict linear-exponential layouts scaling from 4px to 64px.</p>
+              
+              <div class="typo-showcase-list mt-md">
+                <div class="d-flex flex-col gap-2xs">
+                  <div class="d-flex justify-between" style="font-size: var(--font-size-xs); color: var(--text-secondary);">
+                    <span>--space-2xs (4px)</span>
+                    <span class="font-semibold">4px</span>
+                  </div>
+                  <div class="spacing-showcase-bar" style="width: var(--space-2xs);"></div>
+                </div>
+                
+                <div class="d-flex flex-col gap-2xs">
+                  <div class="d-flex justify-between" style="font-size: var(--font-size-xs); color: var(--text-secondary);">
+                    <span>--space-xs (8px)</span>
+                    <span class="font-semibold">8px</span>
+                  </div>
+                  <div class="spacing-showcase-bar" style="width: var(--space-xs);"></div>
+                </div>
+                
+                <div class="d-flex flex-col gap-2xs">
+                  <div class="d-flex justify-between" style="font-size: var(--font-size-xs); color: var(--text-secondary);">
+                    <span>--space-sm (12px)</span>
+                    <span class="font-semibold">12px</span>
+                  </div>
+                  <div class="spacing-showcase-bar" style="width: var(--space-sm);"></div>
+                </div>
+                
+                <div class="d-flex flex-col gap-2xs">
+                  <div class="d-flex justify-between" style="font-size: var(--font-size-xs); color: var(--text-secondary);">
+                    <span>--space-md (16px)</span>
+                    <span class="font-semibold">16px</span>
+                  </div>
+                  <div class="spacing-showcase-bar" style="width: var(--space-md);"></div>
+                </div>
+                
+                <div class="d-flex flex-col gap-2xs">
+                  <div class="d-flex justify-between" style="font-size: var(--font-size-xs); color: var(--text-secondary);">
+                    <span>--space-lg (24px)</span>
+                    <span class="font-semibold">24px</span>
+                  </div>
+                  <div class="spacing-showcase-bar" style="width: var(--space-lg);"></div>
+                </div>
+                
+                <div class="d-flex flex-col gap-2xs">
+                  <div class="d-flex justify-between" style="font-size: var(--font-size-xs); color: var(--text-secondary);">
+                    <span>--space-xl (32px)</span>
+                    <span class="font-semibold">32px</span>
+                  </div>
+                  <div class="spacing-showcase-bar" style="width: var(--space-xl);"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card token-showcase-item" data-token-name="Border Radius Curvature Shapes Box Radius" data-token-description="Consistent corner border curves: 6px small, 12px medium, 16px large.">
+              <h4 class="h4-premium">4. Border Radius Curvature</h4>
+              <p class="text-color-secondary font-regular mt-2xs" style="font-size: var(--font-size-xs);">Standard curves defining structural UI component shapes.</p>
+              
+              <div class="d-grid grid-col flex-col gap-md mt-md">
+                <div class="radius-box-swatch" style="border-radius: var(--radius-sm);">
+                  <span>--radius-sm (6px)</span>
+                </div>
+                
+                <div class="radius-box-swatch" style="border-radius: var(--radius-md);">
+                  <span>--radius-md (12px)</span>
+                </div>
+                
+                <div class="radius-box-swatch" style="border-radius: var(--radius-lg);">
+                  <span>--radius-lg (16px)</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card token-showcase-item" data-token-name="Elevation Shadows Card Modal Depth Box-shadow" data-token-description="Organic soft multi-layered drop shadows representing layout height depths.">
+              <h4 class="h4-premium">5. Elevation & Shadows</h4>
+              <p class="text-color-secondary font-regular mt-2xs" style="font-size: var(--font-size-xs);">Multi-layered drop-shadow weights for spatial layering.</p>
+              
+              <div class="d-grid flex-col gap-md mt-md">
+                <div class="shadow-showcase-card" style="box-shadow: var(--shadow-sm); border: 1px solid var(--border-color);">
+                  <span style="font-size: var(--font-size-xs); font-weight: var(--font-weight-medium); color: var(--text-secondary);">Small Shadow (--shadow-sm)</span>
+                </div>
+                
+                <div class="shadow-showcase-card" style="box-shadow: var(--shadow-card);">
+                  <span style="font-size: var(--font-size-xs); font-weight: var(--font-weight-medium); color: var(--text-primary);">Card Shadow (--shadow-card)</span>
+                </div>
+                
+                <div class="shadow-showcase-card" style="box-shadow: var(--shadow-hover); border: 1px solid var(--primary-100);">
+                  <span style="font-size: var(--font-size-xs); font-weight: var(--font-weight-medium); color: var(--primary-700);">Hover Focus Shadow (--shadow-hover)</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card token-showcase-item" data-token-name="Transition Timings Animations Fast Normal Easing Cubic-bezier" data-token-description="Animation transitions: 150ms fast, 300ms normal timing curves.">
+              <h4 class="h4-premium">6. Easing & Motion Presets</h4>
+              <p class="text-color-secondary font-regular mt-2xs" style="font-size: var(--font-size-xs);">Cubic-bezier curves (standard ease) for modern hover responses.</p>
+              
+              <div class="d-flex flex-col gap-md mt-md">
+                <div class="d-flex flex-col gap-xs">
+                  <span style="font-size: var(--font-size-xs); color: var(--text-secondary);">Hover to test Fast Transition (150ms)</span>
+                  <div class="transition-swatch-box fast">--transition-fast</div>
+                </div>
+                
+                <div class="d-flex flex-col gap-xs">
+                  <span style="font-size: var(--font-size-xs); color: var(--text-secondary);">Hover to test Normal Transition (300ms)</span>
+                  <div class="transition-swatch-box normal">--transition-normal</div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        </section>
+
+        <section id="catalog" class="dashboard-section">
+          
+          <div class="component-catalog-section">
+            
+            <div class="catalog-column">
+              
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="h3-premium">Button Component Hierarchy</h3>
+                  <span class="badge badge-primary">Buttons</span>
+                </div>
+                
+                <div class="catalog-group">
+                  <h4 class="h5-premium catalog-group-title">Filled States</h4>
+                  <div class="button-demo-grid">
+                    <button class="btn btn-primary btn-md demo-btn-action" data-variant="primary">Primary Button</button>
+                    <button class="btn btn-secondary btn-md demo-btn-action" data-variant="secondary">Secondary</button>
+                    <button class="btn btn-success btn-md demo-btn-action" data-variant="success">Success</button>
+                    <button class="btn btn-warning btn-md demo-btn-action" data-variant="warning">Warning</button>
+                    <button class="btn btn-danger btn-md demo-btn-action" data-variant="danger">Danger</button>
+                  </div>
+                </div>
+
+                <div class="catalog-group mt-lg">
+                  <h4 class="h5-premium catalog-group-title">Sizing Framework</h4>
+                  <div class="button-demo-grid">
+                    <button class="btn btn-primary btn-sm demo-btn-action" data-variant="primary">Small (sm)</button>
+                    <button class="btn btn-primary btn-md demo-btn-action" data-variant="primary">Medium (md)</button>
+                    <button class="btn btn-primary btn-lg demo-btn-action" data-variant="primary">Large (lg)</button>
+                  </div>
+                </div>
+
+                <div class="catalog-group mt-lg">
+                  <h4 class="h5-premium catalog-group-title">Outline & Borderless Text</h4>
+                  <div class="button-demo-grid">
+                    <button class="btn btn-outline btn-md demo-btn-action" data-variant="outline">Outline Action</button>
+                    <button class="btn btn-text btn-md demo-btn-action" data-variant="text">Borderless Text</button>
+                    <button class="btn btn-primary btn-md" disabled>Disabled State</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="h3-premium">Card Component Grid</h3>
+                  <span class="badge badge-primary">Cards</span>
+                </div>
+
+                <div class="d-grid gap-lg" style="grid-template-columns: 1fr 1fr;">
+                  <div class="card p-md">
+                    <h4 class="h4-premium">Standard Card</h4>
+                    <p class="mt-xs text-color-secondary" style="font-size: var(--font-size-sm);">
+                      Simple content container utilizing <code>--shadow-card</code>, <code>--radius-md</code>, and linear margin/paddings.
+                    </p>
+                  </div>
+                  
+                  <div class="card card-interactive p-md">
+                    <div class="d-flex align-center justify-between">
+                      <h4 class="h4-premium text-color-primary">Interactive Card</h4>
+                      <i class="fa-solid fa-arrow-up-right-from-square text-color-secondary" style="font-size: var(--font-size-xs);"></i>
+                    </div>
+                    <p class="mt-xs text-color-secondary" style="font-size: var(--font-size-sm);">
+                      Lifts up by <code>-4px</code>, alters border color, and glows with <code>--shadow-hover</code> when hovered.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="card mt-lg p-0">
+                  <div class="card-header px-lg py-md m-0">
+                    <div class="d-flex align-center gap-xs">
+                      <i class="fa-solid fa-cubes-stacked text-color-secondary"></i>
+                      <h4 class="h4-premium">Structured Document Card</h4>
+                    </div>
+                    <span class="badge badge-primary">Standard</span>
+                  </div>
+                  
+                  <div class="px-lg py-md">
+                    <p class="text-color-secondary" style="font-size: var(--font-size-sm);">
+                      Completely organized using strict sub-containers. The header and footer borders are driven strictly by the structural design token <code>--border-color</code>, ensuring a flawless visual grid matching light/dark states.
+                    </p>
+                  </div>
+                  
+                  <div class="card-footer px-lg py-md m-0">
+                    <button class="btn btn-outline btn-sm demo-btn-action" data-variant="outline">Dismiss</button>
+                    <button class="btn btn-primary btn-sm demo-btn-action" data-variant="primary">Proceed</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="h3-premium">Input Elements Framework</h3>
+                  <span class="badge badge-primary">Forms</span>
+                </div>
+                
+                <div class="d-grid gap-md" style="grid-template-columns: 1fr 1fr;">
+                  <div class="d-flex flex-col gap-2xs">
+                    <label style="font-size: var(--font-size-xs); font-weight: var(--font-weight-semibold); color: var(--text-secondary);">Default Text Input</label>
+                    <input type="text" class="input-base" placeholder="Enter placeholder text...">
+                  </div>
+                  
+                  <div class="d-flex flex-col gap-2xs">
+                    <label style="font-size: var(--font-size-xs); font-weight: var(--font-weight-semibold); color: var(--text-secondary);">Disabled State</label>
+                    <input type="text" class="input-base" disabled value="Security locked field">
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="catalog-column">
+              
+              <div class="card playground-widget">
+                <div class="card-header">
+                  <h3 class="h4-premium">Spacing Playground</h3>
+                  <i class="fa-solid fa-gamepad text-color-secondary"></i>
+                </div>
+                
+                <p class="text-color-secondary" style="font-size: var(--font-size-xs);">
+                  Adjust spacing and border radius variables below in real time to observe the token scaling properties in action.
+                </p>
+                
+                <div class="playground-controls mt-md">
+                  <div class="d-flex flex-col gap-2xs">
+                    <label for="spacing-demo-select" style="font-size: 11px; font-weight: var(--font-weight-semibold); color: var(--text-secondary);">Padding Token</label>
+                    <select id="spacing-demo-select" class="input-base">
+                      <option value="var(--space-2xs)">--space-2xs (4px)</option>
+                      <option value="var(--space-xs)">--space-xs (8px)</option>
+                      <option value="var(--space-sm)">--space-sm (12px)</option>
+                      <option value="var(--space-md)" selected>--space-md (16px)</option>
+                      <option value="var(--space-lg)">--space-lg (24px)</option>
+                      <option value="var(--space-xl)">--space-xl (32px)</option>
+                      <option value="var(--space-2xl)">--space-2xl (48px)</option>
+                    </select>
+                  </div>
+
+                  <div class="d-flex flex-col gap-2xs">
+                    <label for="radius-demo-select" style="font-size: 11px; font-weight: var(--font-weight-semibold); color: var(--text-secondary);">Border Radius Token</label>
+                    <select id="radius-demo-select" class="input-base">
+                      <option value="var(--radius-sm)">--radius-sm (6px)</option>
+                      <option value="var(--radius-md)" selected>--radius-md (12px)</option>
+                      <option value="var(--radius-lg)">--radius-lg (16px)</option>
+                      <option value="var(--radius-full)">--radius-full (9999px)</option>
+                    </select>
+                  </div>
+                </div>
+                
+                <div class="demo-target-container mt-lg">
+                  <div id="demo-target-box" class="demo-target-box-layout" style="padding: var(--space-md); border-radius: var(--radius-md);">
+                    <div style="font-size: var(--font-size-xs); opacity: 0.5; font-weight: var(--font-weight-semibold); text-transform: uppercase;">Sandbox Element</div>
+                    <div class="mt-2xs" style="font-size: var(--font-size-xs); font-weight: var(--font-weight-bold);">
+                      Padding: <span id="spacing-value-label" style="color: var(--primary-500);">var(--space-md)</span><br>
+                      Radius: <span id="radius-value-label" style="color: var(--primary-500);">var(--radius-md)</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="terminal-widget">
+                <div class="terminal-header">
+                  <div class="terminal-dots">
+                    <span class="term-dot dot-red"></span>
+                    <span class="term-dot dot-yellow"></span>
+                    <span class="term-dot dot-green"></span>
+                  </div>
+                  <span class="terminal-title">Action Event Console</span>
+                  <button id="clear-logs-btn" class="btn btn-text btn-sm" style="color: var(--neutral-400); padding: 2px 6px; font-size: 9px;">Clear</button>
+                </div>
+                <div id="interactive-terminal-logs" class="terminal-body">
+                  <div class="terminal-line placeholder">Click any button or interactive element to inspect the design token action pipeline here...</div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

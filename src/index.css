@@ -1,0 +1,5 @@
+/* index.css */
+@import './assets/css/tokens.css';
+@import './assets/css/global.css';
+@import './assets/css/components.css';
+@import './assets/css/dashboard.css';
