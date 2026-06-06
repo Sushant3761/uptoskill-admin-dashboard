@@ -89,9 +89,13 @@ const TokenShowcase = () => {
             <span className="typo-label">Small --sm</span>
             <span style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)' }}>Small Medium 14px</span>
           </div>
-          <div className="typo-item">
-            <span className="typo-label">Weights scale</span>
-            <div className="d-flex gap-xs" style={{ fontSize: 'var(--font-size-sm)' }}>
+          <div className="typo-item" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 'var(--space-xs)', alignItems: 'start' }}>
+            <span className="typo-label" style={{ width: '100%', marginBottom: 0 }}>Weights scale</span>
+            <div className="d-grid gap-xs" style={{ 
+              gridTemplateColumns: 'repeat(auto-fill, minmax(80px, 1fr))', 
+              fontSize: 'var(--font-size-sm)',
+              width: '100%' 
+            }}>
               <span className="font-light">Light</span>
               <span className="font-regular">Regular</span>
               <span className="font-medium">Medium</span>

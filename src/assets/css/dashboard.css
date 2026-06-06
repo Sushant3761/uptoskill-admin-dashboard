@@ -76,7 +76,7 @@ body.dark-theme .sidebar {
   width: 18px;
   font-size: var(--font-size-base);
   text-align: center;
-  transition: color var(--transition-fast);
+  transition: color var(--transition-fast), transform var(--transition-fast);
 }
 
 .sidebar-nav-item:hover {
@@ -84,9 +84,21 @@ body.dark-theme .sidebar {
   color: #ffffff;
 }
 
+.sidebar-nav-item:hover i {
+  transform: translateX(2px);
+}
+
+.sidebar-nav-item:focus-visible {
+  outline: none;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  box-shadow: 0 0 0 2px var(--bg-sidebar), 0 0 0 4px var(--primary-400);
+}
+
 .sidebar-nav-item.active {
   background-color: var(--primary-600);
   color: #ffffff;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
 }
 
 .sidebar-nav-item.active i {
@@ -586,48 +598,27 @@ body.dark-theme .badge-primary {
 
 .metric-icon-primary {
   color: var(--primary-500);
-  background-color: var(--primary-50);
+  background-color: var(--bg-primary-soft);
 }
 
 .metric-icon-secondary {
   color: var(--secondary-500);
-  background-color: var(--secondary-50);
+  background-color: var(--bg-secondary-soft);
 }
 
 .metric-icon-success {
   color: var(--success-500);
-  background-color: var(--success-50);
+  background-color: var(--bg-success-soft);
 }
 
 .metric-icon-warning {
   color: var(--warning-500);
-  background-color: var(--warning-50);
+  background-color: var(--bg-warning-soft);
 }
 
 .metric-icon-danger {
   color: var(--danger-500);
-  background-color: var(--danger-50);
-}
-
-/* Dark Theme Adaptations for Icon Circles */
-body.dark-theme .metric-icon-primary {
-  background-color: rgba(99, 102, 241, 0.12);
-}
-
-body.dark-theme .metric-icon-secondary {
-  background-color: rgba(168, 85, 247, 0.12);
-}
-
-body.dark-theme .metric-icon-success {
-  background-color: rgba(16, 185, 129, 0.12);
-}
-
-body.dark-theme .metric-icon-warning {
-  background-color: rgba(245, 158, 11, 0.12);
-}
-
-body.dark-theme .metric-icon-danger {
-  background-color: rgba(244, 63, 94, 0.12);
+  background-color: var(--bg-danger-soft);
 }
 
 /* ==========================================
@@ -739,16 +730,24 @@ body.dark-theme .metric-icon-danger {
   left: 0;
   right: 0;
   bottom: 0;
+  background-color: rgba(15, 23, 42, 0);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  z-index: 99;
+  pointer-events: none;
+  visibility: hidden;
+  transition: 
+    background-color var(--transition-normal) var(--transition-timing-standard),
+    backdrop-filter var(--transition-normal) var(--transition-timing-standard),
+    visibility var(--transition-normal) var(--transition-timing-standard);
+}
+
+.sidebar-backdrop.sidebar-backdrop-open {
   background-color: rgba(15, 23, 42, 0.4);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
-  z-index: 99;
-  animation: fadeIn var(--transition-fast) forwards;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  pointer-events: auto;
+  visibility: visible;
 }
 
 @media (max-width: 1023px) {
@@ -810,11 +809,16 @@ body.dark-theme .metric-icon-danger {
 /* Mobile: header title and dividers adjustments */
 @media (max-width: 639px) {
   .header-meta-sub,
-  .header-meta-divider {
+  .header-meta-divider,
+  .theme-toggle-text,
+  .user-profile-details {
     display: none !important;
   }
   .header-title {
     font-size: var(--font-size-sm) !important;
+  }
+  .user-profile {
+    padding: 0 var(--space-2xs) !important;
   }
 }
 

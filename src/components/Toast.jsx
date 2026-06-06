@@ -1,105 +1,78 @@
+import { useToast } from '../hooks/useToast';
+
 /**
- * Reusable Stack-Based Toast system.
- * Types supported:
- * - success: green (var(--success-500))
- * - error: red (var(--danger-500))
- * - warning: orange (var(--warning-500))
- * - info: blue (var(--primary-500))
- * 
+ * Global Toast stack component.
+ * Pulls toast notifications directly from the custom useToast context.
  * Features:
- * - Fixed positioning at top right.
- * - Dynamic tokens styling.
- * - Aria live notifications.
+ * - Fixed position top-right container.
+ * - Auto-dismiss and manual dismiss.
+ * - Custom icons based on status type.
+ * - Screen-reader ARIA live regions.
+ * - CSS-driven slide transitions.
  */
-const Toast = ({ toasts = [], onClose }) => {
+const Toast = () => {
+  const { toasts, removeToast } = useToast();
+
   if (toasts.length === 0) return null;
 
+  const getToastIcon = (type) => {
+    switch (type) {
+      case 'success':
+        return 'fa-solid fa-circle-check';
+      case 'error':
+        return 'fa-solid fa-circle-xmark';
+      case 'warning':
+        return 'fa-solid fa-triangle-exclamation';
+      case 'info':
+      default:
+        return 'fa-solid fa-circle-info';
+    }
+  };
+
   return (
-    <div 
-      className="toast-container"
-      style={{
-        position: 'fixed',
-        top: 'var(--space-md)',
-        right: 'var(--space-md)',
-        zIndex: 2100,
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 'var(--space-xs)',
-        width: '320px',
-        maxWidth: 'calc(100vw - var(--space-xl))'
-      }}
-    >
+    <div className="toast-container" aria-label="Notifications stack">
       {toasts.map((toast) => {
-        // Build style and icons based on alert type
-        let borderHighlightColor;
-        let toastIcon;
-        let bgStyleColor = 'var(--bg-card)';
-        
-        switch (toast.type) {
-          case 'success':
-            borderHighlightColor = 'var(--success-500)';
-            toastIcon = 'fa-solid fa-circle-check';
-            break;
-          case 'error':
-            borderHighlightColor = 'var(--danger-500)';
-            toastIcon = 'fa-solid fa-circle-xmark';
-            break;
-          case 'warning':
-            borderHighlightColor = 'var(--warning-500)';
-            toastIcon = 'fa-solid fa-triangle-exclamation';
-            break;
-          case 'info':
-          default:
-            borderHighlightColor = 'var(--primary-500)';
-            toastIcon = 'fa-solid fa-circle-info';
-            break;
-        }
+        const toastIcon = getToastIcon(toast.type);
+        const isError = toast.type === 'error';
 
         return (
           <div
             key={toast.id}
-            className={`toast-item toast-item-${toast.type} d-flex align-start gap-xs`}
-            style={{
-              backgroundColor: bgStyleColor,
-              border: '1px solid var(--border-color)',
-              borderLeft: `4px solid ${borderHighlightColor}`,
-              borderRadius: 'var(--radius-sm)',
-              boxShadow: 'var(--shadow-modal)',
-              padding: 'var(--space-sm) var(--space-md)',
-              animation: 'toastSlideIn var(--transition-fast) forwards',
-              position: 'relative'
-            }}
-            role={toast.type === 'error' ? 'alert' : 'status'}
-            aria-live={toast.type === 'error' ? 'assertive' : 'polite'}
+            className={`toast toast-${toast.type} ${toast.exiting ? 'toast-exiting' : ''}`}
+            role={isError ? 'alert' : 'status'}
+            aria-live={isError ? 'assertive' : 'polite'}
+            aria-atomic="true"
           >
-            {/* Status Icon */}
+            {/* Type Icon */}
             <div 
               style={{ 
-                color: borderHighlightColor, 
+                color: `var(--${toast.type === 'error' ? 'danger' : toast.type}-500)`, 
                 fontSize: 'var(--font-size-base)',
-                marginTop: '1px'
+                marginTop: '2px',
+                display: 'inline-flex',
+                flexShrink: 0
               }}
             >
               <i className={toastIcon}></i>
             </div>
 
-            {/* Content text */}
-            <div className="d-flex flex-col" style={{ width: '100%' }}>
+            {/* Notification Text */}
+            <div className="d-flex flex-col" style={{ flexGrow: 1, gap: 'var(--space-2xs)' }}>
               <span 
                 style={{ 
                   fontSize: 'var(--font-size-sm)', 
                   fontWeight: 'var(--font-weight-semibold)',
                   color: 'var(--text-primary)',
-                  lineHeight: 'var(--line-height-tight)'
+                  lineHeight: 'var(--line-height-none)',
+                  textTransform: 'capitalize'
                 }}
               >
-                {toast.type.toUpperCase()}
+                {toast.type}
               </span>
               <span 
                 style={{ 
                   fontSize: 'var(--font-size-xs)', 
                   color: 'var(--text-secondary)',
-                  marginTop: 'var(--space-2xs)',
                   lineHeight: 'var(--line-height-normal)'
                 }}
               >
@@ -107,23 +80,12 @@ const Toast = ({ toasts = [], onClose }) => {
               </span>
             </div>
 
-            {/* Manual Dismiss button */}
+            {/* Dismiss Button */}
             <button
-              onClick={() => onClose && onClose(toast.id)}
-              style={{
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                color: 'var(--text-tertiary)',
-                padding: 'var(--space-2xs)',
-                fontSize: 'var(--font-size-xs)',
-                borderRadius: 'var(--radius-sm)',
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'color var(--transition-fast)'
-              }}
-              aria-label="Dismiss alert"
+              type="button"
+              className="toast-close-btn"
+              onClick={() => removeToast(toast.id)}
+              aria-label={`Dismiss ${toast.type} notification`}
             >
               <i className="fa-solid fa-xmark"></i>
             </button>

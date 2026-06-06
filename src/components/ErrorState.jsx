@@ -30,7 +30,7 @@ const ErrorState = ({
           width: '72px',
           height: '72px',
           borderRadius: 'var(--radius-full)',
-          backgroundColor: 'rgba(244, 63, 94, 0.08)',
+          backgroundColor: 'var(--bg-danger-soft)',
           color: 'var(--danger-500)',
           fontSize: 'var(--font-size-3xl)'
         }}

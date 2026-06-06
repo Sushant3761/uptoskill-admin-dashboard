@@ -30,7 +30,7 @@ const EmptyState = ({
           width: '72px',
           height: '72px',
           borderRadius: 'var(--radius-full)',
-          backgroundColor: 'rgba(99, 102, 241, 0.08)',
+          backgroundColor: 'var(--bg-primary-soft)',
           color: 'var(--primary-500)',
           fontSize: 'var(--font-size-3xl)'
         }}

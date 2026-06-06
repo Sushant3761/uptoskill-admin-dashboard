@@ -16,13 +16,11 @@ const DashboardLayout = ({
   return (
     <div className="admin-shell">
       {/* Backdrop overlay for mobile collapsible sidebar */}
-      {sidebarOpen && (
-        <div 
-          className="sidebar-backdrop"
-          onClick={() => setSidebarOpen(false)}
-          aria-hidden="true"
-        ></div>
-      )}
+      <div 
+        className={`sidebar-backdrop ${sidebarOpen ? 'sidebar-backdrop-open' : ''}`}
+        onClick={() => setSidebarOpen(false)}
+        aria-hidden="true"
+      ></div>
       
       <Sidebar 
         activeTab={activeTab} 

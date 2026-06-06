@@ -1,36 +1,71 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 /**
- * Reusable, premium Modal component.
+ * Reusable, accessible, and premium Modal shell.
+ * Renders into a document body portal for nesting robustness.
  * Features:
- * - Focus Trap for accessibility (Tab cycling trapped inside modal).
- * - Keyboard listeners (Close on Escape key).
- * - Soft glassmorphism backdrop & token transitions.
- * - Screen-reader aria attributes.
+ * - Keyboard Focus Trap (Tab and Shift+Tab cycling).
+ * - Close on Escape key press.
+ * - Backdrop click to dismiss.
+ * - Focus restoration to triggering element on close.
+ * - Entrance and Exit animations for backdrop and container.
+ * - Sizing options: 'sm' | 'md' | 'lg'.
  */
-const Modal = ({ isOpen, onClose, title, children }) => {
+const Modal = ({ 
+  open, 
+  onClose, 
+  title, 
+  children, 
+  size = 'md', 
+  showCloseButton = true 
+}) => {
   const modalRef = useRef(null);
   const previousFocus = useRef(null);
+  const [prevOpen, setPrevOpen] = useState(open);
+  const [shouldRender, setShouldRender] = useState(open);
+  const [isExiting, setIsExiting] = useState(false);
+
+  // Sync prop changes directly in render (React-recommended pattern)
+  if (open !== prevOpen) {
+    setPrevOpen(open);
+    if (open) {
+      setShouldRender(true);
+      setIsExiting(false);
+    } else {
+      setIsExiting(true);
+    }
+  }
+
+  // Handle timed exit phase
+  useEffect(() => {
+    if (isExiting) {
+      const timer = setTimeout(() => {
+        setShouldRender(false);
+        setIsExiting(false);
+      }, 150);
+      return () => clearTimeout(timer);
+    }
+  }, [isExiting]);
 
   // Keyboard navigation & Focus trapping
   useEffect(() => {
-    if (!isOpen) return;
+    if (!open) return;
 
-    // Save previously focused element
+    // Track active element to return focus later
     previousFocus.current = document.activeElement;
 
     const handleKeyDown = (e) => {
-      // 1. Escape key to close
+      // 1. Escape key closes modal
       if (e.key === 'Escape') {
         onClose();
         return;
       }
 
-      // 2. Tab key focus trapping
+      // 2. Tab focus trap cycling
       if (e.key === 'Tab') {
         if (!modalRef.current) return;
         
-        // Find all focusable items inside modal
         const focusableSelectors = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
         const focusableElements = Array.from(modalRef.current.querySelectorAll(focusableSelectors));
         
@@ -43,13 +78,13 @@ const Modal = ({ isOpen, onClose, title, children }) => {
         const lastElement = focusableElements[focusableElements.length - 1];
 
         if (e.shiftKey) {
-          // Shift + Tab -> cycle to end if on first element
+          // Shift + Tab -> loop back to last element
           if (document.activeElement === firstElement) {
             lastElement.focus();
             e.preventDefault();
           }
         } else {
-          // Tab -> cycle to beginning if on last element
+          // Tab -> loop back to first element
           if (document.activeElement === lastElement) {
             firstElement.focus();
             e.preventDefault();
@@ -60,17 +95,24 @@ const Modal = ({ isOpen, onClose, title, children }) => {
 
     window.addEventListener('keydown', handleKeyDown);
     
-    // Auto focus the close button or first input in the next tick
+    // Defer focus placement slightly to ensure content is fully loaded
     const timer = setTimeout(() => {
       if (modalRef.current) {
-        const firstInput = modalRef.current.querySelector('input, button');
-        if (firstInput) {
-          firstInput.focus();
+        // Prioritize inputs/textarea fields, then close button or other focusables
+        const inputField = modalRef.current.querySelector('input, textarea, select');
+        if (inputField) {
+          inputField.focus();
+        } else {
+          const focusableSelectors = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+          const focusableElements = Array.from(modalRef.current.querySelectorAll(focusableSelectors));
+          if (focusableElements.length > 0) {
+            focusableElements[0].focus();
+          }
         }
       }
     }, 50);
 
-    // Prevent body scroll
+    // Prevent background scrolling
     document.body.style.overflow = 'hidden';
 
     return () => {
@@ -78,49 +120,56 @@ const Modal = ({ isOpen, onClose, title, children }) => {
       clearTimeout(timer);
       document.body.style.overflow = '';
       
-      // Restore focus
+      // Restore focus to original triggering button
       if (previousFocus.current) {
         previousFocus.current.focus();
       }
     };
-  }, [isOpen, onClose]);
+  }, [open, onClose]);
 
-  if (!isOpen) return null;
+  // Handle backdrop clicks directly, bypassing content bubbled clicks
+  const handleBackdropClick = (e) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
 
-  return (
+  if (!shouldRender) return null;
+
+  return createPortal(
     <div 
-      className="modal-backdrop" 
-      onClick={onClose}
+      className={`modal-backdrop ${isExiting ? 'exiting' : ''}`} 
+      onClick={handleBackdropClick}
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"
     >
       <div 
-        className="modal-content" 
+        className={`modal-content modal-${size} ${isExiting ? 'exiting' : ''}`} 
         ref={modalRef}
         onClick={(e) => e.stopPropagation()}
-        style={{
-          animation: 'modalSlideIn var(--transition-normal) forwards'
-        }}
       >
         <header className="modal-header">
           <h3 id="modal-title" className="h3-premium" style={{ margin: 0 }}>
             {title}
           </h3>
-          <button 
-            type="button" 
-            onClick={onClose} 
-            className="modal-close-btn"
-            aria-label="Close modal"
-          >
-            <i className="fa-solid fa-xmark"></i>
-          </button>
+          {showCloseButton && (
+            <button 
+              type="button" 
+              onClick={onClose} 
+              className="modal-close-btn"
+              aria-label="Close modal"
+            >
+              <i className="fa-solid fa-xmark"></i>
+            </button>
+          )}
         </header>
         <div className="modal-body">
           {children}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

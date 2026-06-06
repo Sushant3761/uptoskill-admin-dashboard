@@ -61,7 +61,7 @@ const QuickActions = ({ onActionClick }) => {
             size="sm"
             className="quick-action-btn"
           >
-            <i className={action.icon}></i>
+            <i className={action.icon} aria-hidden="true"></i>
             <span>{action.label}</span>
           </Button>
         ))}

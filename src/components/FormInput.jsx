@@ -80,6 +80,7 @@ const FormInput = ({
             aria-invalid={hasError ? 'true' : 'false'}
             aria-describedby={hasError ? errorId : undefined}
             required={required}
+            aria-required={required ? 'true' : 'false'}
             {...rest}
           >
             <option value="" disabled>{placeholder || 'Select option...'}</option>
@@ -102,6 +103,7 @@ const FormInput = ({
             aria-invalid={hasError ? 'true' : 'false'}
             aria-describedby={hasError ? errorId : undefined}
             required={required}
+            aria-required={required ? 'true' : 'false'}
             style={{ minHeight: '80px', resize: 'vertical' }}
             {...rest}
           />
@@ -119,6 +121,7 @@ const FormInput = ({
             aria-invalid={hasError ? 'true' : 'false'}
             aria-describedby={hasError ? errorId : undefined}
             required={required}
+            aria-required={required ? 'true' : 'false'}
             {...rest}
           />
         )}
@@ -143,14 +146,14 @@ const FormInput = ({
             <i 
               className="fa-solid fa-circle-exclamation text-danger" 
               style={{ color: 'var(--danger-500)', fontSize: 'var(--font-size-sm)' }}
-              title="Invalid input"
+              aria-hidden="true"
             ></i>
           )}
           {isValid && (
             <i 
               className="fa-solid fa-circle-check text-success" 
               style={{ color: 'var(--success-500)', fontSize: 'var(--font-size-sm)' }}
-              title="Valid input"
+              aria-hidden="true"
             ></i>
           )}
 
@@ -160,21 +163,9 @@ const FormInput = ({
               type="button"
               onClick={() => setShowPassword((prev) => !prev)}
               className="password-toggle-btn"
-              style={{
-                background: 'none',
-                border: 'none',
-                padding: 'var(--space-2xs)',
-                cursor: 'pointer',
-                color: 'var(--text-secondary)',
-                pointerEvents: 'auto',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'color var(--transition-fast)'
-              }}
               aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
-              <i className={showPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'}></i>
+              <i className={showPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'} aria-hidden="true"></i>
             </button>
           )}
         </div>
@@ -182,7 +173,7 @@ const FormInput = ({
 
       {/* Password strength meter visualizer */}
       {type === 'password' && value && passwordStrength && (
-        <div className="password-strength-container d-flex flex-col gap-2xs mt-2xs">
+        <div className="password-strength-container d-flex flex-col gap-2xs mt-2xs" role="status" aria-live="polite">
           <div className="d-flex align-center justify-between" style={{ fontSize: 'var(--font-size-xs)' }}>
             <span style={{ color: 'var(--text-secondary)' }}>Password Strength:</span>
             <span 

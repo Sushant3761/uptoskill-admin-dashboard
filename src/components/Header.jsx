@@ -10,12 +10,12 @@ const Header = ({ theme, toggleTheme, sidebarOpen, toggleSidebar }) => {
           aria-label={sidebarOpen ? 'Close navigation sidebar' : 'Open navigation sidebar'}
           aria-expanded={sidebarOpen ? 'true' : 'false'}
         >
-          <i className={sidebarOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars'}></i>
+          <i className={sidebarOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars'} aria-hidden="true"></i>
         </button>
 
-        <h2 className="h3-premium text-color-primary header-title" style={{ margin: 0 }}>
+        <h1 className="h3-premium text-color-primary header-title" style={{ margin: 0 }}>
           Admin System Console
-        </h2>
+        </h1>
         <span className="header-meta-divider" style={{ color: 'var(--text-tertiary)', fontSize: 'var(--font-size-xs)' }}>|</span>
         <span className="header-meta-sub" style={{
           color: 'var(--text-secondary)',
@@ -32,13 +32,13 @@ const Header = ({ theme, toggleTheme, sidebarOpen, toggleSidebar }) => {
           className="btn btn-outline btn-sm"
           style={{ cursor: 'pointer' }}
         >
-          <i className={theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon'}></i>
-          <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
+          <i className={theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon'} aria-hidden="true"></i>
+          <span className="theme-toggle-text">{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
         </button>
         
         <div className="user-profile">
           <div className="avatar">US</div>
-          <div className="d-flex flex-col ml-xs">
+          <div className="d-flex flex-col ml-xs user-profile-details">
             <span style={{
               fontSize: 'var(--font-size-sm)',
               fontWeight: 'var(--font-weight-semibold)',

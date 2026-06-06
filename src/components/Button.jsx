@@ -5,6 +5,7 @@ const Button = ({
   onClick,
   disabled = false,
   className = '',
+  type = 'button',
   ...rest
 }) => {
   const baseClass = 'btn';
@@ -13,9 +14,11 @@ const Button = ({
   
   return (
     <button
+      type={type}
       className={`${baseClass} ${variantClass} ${sizeClass} ${className}`}
       onClick={onClick}
       disabled={disabled}
+      aria-disabled={disabled ? 'true' : 'false'}
       {...rest}
     >
       {children}

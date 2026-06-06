@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Card from '../components/Card';
 import Button from '../components/Button';
 import SpacingPlayground from '../components/SpacingPlayground';
@@ -7,8 +7,13 @@ import SkeletonTable from '../components/SkeletonTable';
 import EmptyState from '../components/EmptyState';
 import ErrorState from '../components/ErrorState';
 import { AddInternForm, CreateCourseForm, AddAnnouncementForm } from '../components/AdminForms';
+import ConfirmationModal from '../components/ConfirmationModal';
+import { useToast } from '../hooks/useToast';
+import DataTable from '../components/DataTable';
 
-const ComponentCatalogPage = ({ logs, setLogs, addToast, onOpenForm }) => {
+const ComponentCatalogPage = ({ logs, setLogs, onOpenForm }) => {
+  const toast = useToast();
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [activeFormTab, setActiveFormTab] = useState('intern');
 
   // Phase 5: Intern Directory Table natural state cycles
@@ -20,6 +25,186 @@ const ComponentCatalogPage = ({ logs, setLogs, addToast, onOpenForm }) => {
     { name: 'John Connor', email: 'j.connor@uptoskill.com', role: 'Lead Intern', status: 'Pending' },
     { name: 'Ellen Ripley', email: 'e.ripley@uptoskill.com', role: 'Data Science Intern', status: 'Active' }
   ]);
+
+  // Phase 9 States
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [isBulkConfirmOpen, setIsBulkConfirmOpen] = useState(false);
+  const [pendingBulkAction, setPendingBulkAction] = useState({ type: '', items: [] });
+  const [singleDeleteEmail, setSingleDeleteEmail] = useState(null);
+  const [isSingleDeleteConfirmOpen, setIsSingleDeleteConfirmOpen] = useState(false);
+
+  // DataTable column definitions
+  const columns = useMemo(() => [
+    {
+      header: 'Full Name',
+      key: 'name',
+      sortable: true,
+      render: (row) => (
+        <div className="d-flex align-center gap-xs">
+          <div 
+            className="avatar" 
+            style={{ 
+              width: '28px', 
+              height: '28px', 
+              fontSize: '10px', 
+              fontWeight: 'var(--font-weight-bold)',
+              backgroundColor: 'var(--primary-500)',
+              color: '#ffffff',
+              borderRadius: 'var(--radius-full)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            {row.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
+          </div>
+          <span>{row.name}</span>
+        </div>
+      )
+    },
+    {
+      header: 'Email Address',
+      key: 'email',
+      sortable: true,
+      render: (row) => <span className="text-color-secondary">{row.email}</span>
+    },
+    {
+      header: 'Assigned Role',
+      key: 'role',
+      sortable: true,
+      render: (row) => (
+        <span className="role-badge">
+          {row.role}
+        </span>
+      )
+    },
+    {
+      header: 'Status',
+      key: 'status',
+      sortable: true,
+      render: (row) => {
+        let statusClass = 'status-pending';
+        if (row.status === 'Active') statusClass = 'status-active';
+        if (row.status === 'Archived') statusClass = 'status-archived';
+        
+        return (
+          <span className={statusClass}>
+            {row.status}
+          </span>
+        );
+      }
+    },
+    {
+      header: 'Remove',
+      align: 'center',
+      render: (row) => (
+        <button
+          type="button"
+          onClick={() => {
+            setSingleDeleteEmail(row.email);
+            setIsSingleDeleteConfirmOpen(true);
+          }}
+          style={{
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            color: 'var(--danger-500)',
+            opacity: 0.7,
+            transition: 'opacity var(--transition-fast), transform var(--transition-fast)'
+          }}
+          className="btn-delete-row"
+          aria-label={`Remove intern ${row.name}`}
+        >
+          <i className="fa-solid fa-trash-can" aria-hidden="true"></i>
+        </button>
+      )
+    }
+  ], []);
+
+  // DataTable drop-down filters config
+  const filters = useMemo(() => [
+    {
+      key: 'status',
+      label: 'Status',
+      options: [
+        { label: 'Active', value: 'Active' },
+        { label: 'Pending', value: 'Pending' },
+        { label: 'Archived', value: 'Archived' }
+      ]
+    },
+    {
+      key: 'role',
+      label: 'Role',
+      options: [
+        { label: 'Software Intern', value: 'Software Intern' },
+        { label: 'UX/UI Intern', value: 'UX/UI Intern' },
+        { label: 'Lead Intern', value: 'Lead Intern' },
+        { label: 'Data Science Intern', value: 'Data Science Intern' }
+      ]
+    }
+  ], []);
+
+  // Bulk actions handlers
+  const handleBulkActionConfirm = () => {
+    const selectedEmails = pendingBulkAction.items.map(item => item.email);
+    
+    if (pendingBulkAction.type === 'archive') {
+      setInternList(prev => prev.map(item => 
+        selectedEmails.includes(item.email) ? { ...item, status: 'Archived' } : item
+      ));
+      toast.showSuccess(`Archived ${pendingBulkAction.items.length} intern record(s) successfully.`);
+    } else if (pendingBulkAction.type === 'delete') {
+      const updated = internList.filter(item => !selectedEmails.includes(item.email));
+      setInternList(updated);
+      toast.showWarning(`Removed ${pendingBulkAction.items.length} intern record(s) permanently.`);
+      
+      if (updated.length === 0) {
+        setTableState('empty');
+      }
+    }
+    
+    // Cleanup selection & close modal
+    setSelectedRows([]);
+    setIsBulkConfirmOpen(false);
+  };
+
+  const handleSingleDeleteConfirm = () => {
+    if (!singleDeleteEmail) return;
+    const updated = internList.filter(item => item.email !== singleDeleteEmail);
+    setInternList(updated);
+    toast.showWarning(`Permanently removed intern: ${singleDeleteEmail}`);
+    
+    if (updated.length === 0) {
+      setTableState('empty');
+    }
+    
+    // Clear deleted item from selection array if it was checked
+    setSelectedRows(prev => prev.filter(item => item.email !== singleDeleteEmail));
+    setIsSingleDeleteConfirmOpen(false);
+    setSingleDeleteEmail(null);
+  };
+
+  // DataTable bulk actions config
+  const bulkActions = useMemo(() => [
+    {
+      label: 'Archive Selected',
+      icon: 'fa-solid fa-box-archive',
+      variant: 'warning',
+      onClick: (selected) => {
+        setPendingBulkAction({ type: 'archive', items: selected });
+        setIsBulkConfirmOpen(true);
+      }
+    },
+    {
+      label: 'Delete Selected',
+      icon: 'fa-solid fa-trash-can',
+      variant: 'danger',
+      onClick: (selected) => {
+        setPendingBulkAction({ type: 'delete', items: selected });
+        setIsBulkConfirmOpen(true);
+      }
+    }
+  ], []);
 
   const handleBtnClick = (variant, duration = '150ms') => {
     const timestamp = new Date().toLocaleTimeString();
@@ -38,36 +223,20 @@ const ComponentCatalogPage = ({ logs, setLogs, addToast, onOpenForm }) => {
   // Simulated Retry action triggered from ErrorState retry button
   const handleRetryTable = () => {
     setTableState('loading');
-    if (addToast) {
-      addToast('info', 'Re-synchronizing database connection...');
-    }
+    toast.showInfo('Re-synchronizing database connection...');
     
     // Simulates a loading shimmer cycle of 1.2s before displaying table
     setTimeout(() => {
       setTableState('loaded');
-      if (addToast) {
-        addToast('success', 'Intern directory database connected successfully.');
-      }
+      toast.showSuccess('Intern directory database connected successfully.');
     }, 1200);
   };
 
-  // Row removal simulating database record updates
-  const handleDeleteIntern = (emailToDelete) => {
-    const updated = internList.filter((item) => item.email !== emailToDelete);
-    setInternList(updated);
-    
-    if (addToast) {
-      addToast('warning', `Removed intern file: ${emailToDelete}`);
-    }
 
-    // Naturally shifts to EmptyState if all rows are removed
-    if (updated.length === 0) {
-      setTableState('empty');
-    }
-  };
 
   const handleResetList = () => {
     setTableState('loading');
+    setSelectedRows([]); // Reset selection on refresh
     setTimeout(() => {
       setInternList([
         { name: 'Sarah Connor', email: 's.connor@uptoskill.com', role: 'Software Intern', status: 'Active' },
@@ -76,9 +245,7 @@ const ComponentCatalogPage = ({ logs, setLogs, addToast, onOpenForm }) => {
         { name: 'Ellen Ripley', email: 'e.ripley@uptoskill.com', role: 'Data Science Intern', status: 'Active' }
       ]);
       setTableState('loaded');
-      if (addToast) {
-        addToast('success', 'Intern database directories refreshed.');
-      }
+      toast.showSuccess('Intern database directories refreshed.');
     }, 800);
   };
 
@@ -105,13 +272,9 @@ const ComponentCatalogPage = ({ logs, setLogs, addToast, onOpenForm }) => {
       
       setInternList((prev) => [newRecord, ...prev]);
       setTableState('loaded');
-      if (addToast) {
-        addToast('success', `Intern directory updated: "${newName}" file added.`);
-      }
+      toast.showSuccess(`Intern directory updated: "${newName}" file added.`);
     } else {
-      if (addToast) {
-        addToast('success', successMessage);
-      }
+      toast.showSuccess(successMessage);
     }
   };
 
@@ -165,7 +328,7 @@ const ComponentCatalogPage = ({ logs, setLogs, addToast, onOpenForm }) => {
               <span className="badge badge-primary">Cards</span>
             </Card.Header>
 
-            <div className="d-grid gap-lg" style={{ gridTemplateColumns: '1fr 1fr' }}>
+            <div className="d-grid gap-lg" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))' }}>
               <Card className="p-md">
                 <h4 className="h4-premium">Standard Card</h4>
                 <p className="mt-xs text-color-secondary" style={{ fontSize: 'var(--font-size-sm)' }}>
@@ -347,100 +510,57 @@ const ComponentCatalogPage = ({ logs, setLogs, addToast, onOpenForm }) => {
 
               {/* LOADED STATE TABLE */}
               {tableState === 'loaded' && (
-                <div className="admin-table-responsive" style={{ width: '100%', overflowX: 'auto', animation: 'modalSlideIn var(--transition-normal) forwards' }}>
-                  <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontFamily: 'var(--font-family)', fontSize: 'var(--font-size-sm)' }}>
-                    <thead>
-                      <tr style={{ borderBottom: '2px solid var(--border-color)', color: 'var(--text-secondary)', fontWeight: 'var(--font-weight-semibold)' }}>
-                        <th style={{ padding: 'var(--space-sm) var(--space-md)' }}>Full Name</th>
-                        <th style={{ padding: 'var(--space-sm) var(--space-md)' }}>Email Address</th>
-                        <th style={{ padding: 'var(--space-sm) var(--space-md)' }}>Assigned Role</th>
-                        <th style={{ padding: 'var(--space-sm) var(--space-md)' }}>Status</th>
-                        <th style={{ padding: 'var(--space-sm) var(--space-md)', textAlign: 'center' }}>Remove</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {internList.map((item, idx) => (
-                        <tr 
-                          key={item.email} 
-                          style={{ 
-                            borderBottom: idx === internList.length - 1 ? 'none' : '1px solid var(--border-color)',
-                            color: 'var(--text-primary)',
-                            transition: 'background-color var(--transition-fast)'
-                          }}
-                          className="table-data-row"
-                        >
-                          <td style={{ padding: 'var(--space-md)', fontWeight: 'var(--font-weight-medium)' }}>
-                            <div className="d-flex align-center gap-xs">
-                              <div 
-                                className="avatar" 
-                                style={{ 
-                                  width: '28px', 
-                                  height: '28px', 
-                                  fontSize: '10px', 
-                                  fontWeight: 'var(--font-weight-bold)',
-                                  backgroundColor: 'var(--primary-500)',
-                                  color: '#ffffff',
-                                  borderRadius: 'var(--radius-full)',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center'
-                                }}
-                              >
-                                {item.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
-                              </div>
-                              {item.name}
-                            </div>
-                          </td>
-                          <td style={{ padding: 'var(--space-md)', color: 'var(--text-secondary)' }}>{item.email}</td>
-                          <td style={{ padding: 'var(--space-md)' }}>
-                            <span 
-                              style={{ 
-                                fontSize: 'var(--font-size-xs)', 
-                                fontWeight: 'var(--font-weight-medium)',
-                                padding: 'var(--space-2xs) var(--space-xs)',
-                                borderRadius: 'var(--radius-full)',
-                                backgroundColor: 'rgba(99, 102, 241, 0.08)',
-                                color: 'var(--primary-500)'
-                              }}
-                            >
-                              {item.role}
-                            </span>
-                          </td>
-                          <td style={{ padding: 'var(--space-md)' }}>
-                            <span 
-                              style={{ 
-                                fontSize: 'var(--font-size-xs)', 
-                                fontWeight: 'var(--font-weight-semibold)',
-                                color: item.status === 'Active' ? 'var(--success-500)' : 'var(--warning-500)'
-                              }}
-                            >
-                              {item.status}
-                            </span>
-                          </td>
-                          <td style={{ padding: 'var(--space-md)', textAlign: 'center' }}>
-                            <button
-                              type="button"
-                              onClick={() => handleDeleteIntern(item.email)}
-                              style={{
-                                background: 'none',
-                                border: 'none',
-                                cursor: 'pointer',
-                                color: 'var(--danger-500)',
-                                opacity: 0.7,
-                                transition: 'opacity var(--transition-fast), transform var(--transition-fast)'
-                              }}
-                              className="btn-delete-row"
-                              aria-label={`Remove intern ${item.name}`}
-                            >
-                              <i className="fa-solid fa-trash-can"></i>
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                <DataTable
+                  data={internList}
+                  columns={columns}
+                  filters={filters}
+                  bulkActions={bulkActions}
+                  rowKey="email"
+                  selectedRows={selectedRows}
+                  onSelectionChange={setSelectedRows}
+                  emptyTitle="No Intern Records Found"
+                  emptyDescription="There are currently no active profiles matching your filters."
+                />
               )}
+            </div>
+          </Card>
+
+          {/* Modal & Toast Notification System Showcase */}
+          <Card>
+            <Card.Header>
+              <div className="d-flex align-center gap-xs">
+                <i className="fa-solid fa-bell text-color-secondary"></i>
+                <h3 className="h3-premium">Notification & Dialog Systems (Showcase)</h3>
+              </div>
+              <span className="badge badge-primary">Demo Showcase</span>
+            </Card.Header>
+
+            <div className="catalog-group">
+              <h4 className="h5-premium catalog-group-title">Toast Stack Triggers</h4>
+              <div className="button-demo-grid" style={{ marginBottom: 'var(--space-md)' }}>
+                <Button variant="success" size="sm" onClick={() => toast.showSuccess('Component catalog test: success!')}>
+                  Show Success Toast
+                </Button>
+                <Button variant="danger" size="sm" onClick={() => toast.showError('Component catalog test: error!')}>
+                  Show Error Toast
+                </Button>
+                <Button variant="warning" size="sm" onClick={() => toast.showWarning('Component catalog test: warning!')}>
+                  Show Warning Toast
+                </Button>
+                <Button variant="primary" size="sm" onClick={() => toast.showInfo('Component catalog test: info!')}>
+                  Show Info Toast
+                </Button>
+              </div>
+            </div>
+
+            <div className="catalog-group mt-lg">
+              <h4 className="h5-premium catalog-group-title">Confirmation Overlay</h4>
+              <div>
+                <Button variant="outline" size="md" onClick={() => setIsConfirmOpen(true)}>
+                  <i className="fa-solid fa-circle-question mr-2xs"></i>
+                  Trigger Confirmation Modal
+                </Button>
+              </div>
             </div>
           </Card>
 
@@ -452,6 +572,54 @@ const ComponentCatalogPage = ({ logs, setLogs, addToast, onOpenForm }) => {
         </div>
 
       </div>
+
+      <ConfirmationModal
+        open={isConfirmOpen}
+        title="Delete Administrative Entry?"
+        description="This action is irreversible. Proceeding will permanently purge this demo entry from the virtual registry."
+        confirmLabel="Purge Entry"
+        cancelLabel="Keep Entry"
+        onConfirm={() => {
+          setIsConfirmOpen(false);
+          toast.showSuccess('Administrative entry successfully purged.');
+        }}
+        onCancel={() => {
+          setIsConfirmOpen(false);
+          toast.showInfo('Purge action aborted.');
+        }}
+        variant="danger"
+      />
+
+      {/* Phase 9: Bulk Action Confirmation Modal */}
+      <ConfirmationModal
+        open={isBulkConfirmOpen}
+        title={pendingBulkAction.type === 'archive' ? 'Archive Intern Records?' : 'Delete Intern Records?'}
+        description={
+          pendingBulkAction.type === 'archive'
+            ? `Are you sure you want to archive the ${pendingBulkAction.items.length} selected intern record(s)? This will set their status to Archived.`
+            : `Are you sure you want to permanently delete the ${pendingBulkAction.items.length} selected intern record(s)? This action is irreversible.`
+        }
+        confirmLabel={pendingBulkAction.type === 'archive' ? 'Archive Records' : 'Delete Records'}
+        cancelLabel="Cancel"
+        onConfirm={handleBulkActionConfirm}
+        onCancel={() => setIsBulkConfirmOpen(false)}
+        variant={pendingBulkAction.type === 'archive' ? 'warning' : 'danger'}
+      />
+
+      {/* Phase 9: Single Record Delete Confirmation Modal */}
+      <ConfirmationModal
+        open={isSingleDeleteConfirmOpen}
+        title="Delete Intern Profile?"
+        description={`Are you sure you want to permanently delete the profile file for ${singleDeleteEmail}? This action cannot be undone.`}
+        confirmLabel="Delete Profile"
+        cancelLabel="Keep Profile"
+        onConfirm={handleSingleDeleteConfirm}
+        onCancel={() => {
+          setIsSingleDeleteConfirmOpen(false);
+          setSingleDeleteEmail(null);
+        }}
+        variant="danger"
+      />
     </div>
   );
 };

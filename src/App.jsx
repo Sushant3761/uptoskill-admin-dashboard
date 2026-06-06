@@ -6,8 +6,12 @@ import Modal from './components/Modal';
 import LoadingOverlay from './components/LoadingOverlay';
 import Toast from './components/Toast';
 import { AddInternForm, CreateCourseForm, AddAnnouncementForm } from './components/AdminForms';
+import { NotificationProvider } from './context/NotificationContext';
+import { useToast } from './hooks/useToast';
 
-function App() {
+function AppContent() {
+  const toast = useToast();
+
   // Theme state setup (light by default, checking localStorage first)
   const [theme, setTheme] = useState(() => {
     const savedTheme = localStorage.getItem('admin-theme');
@@ -27,24 +31,8 @@ function App() {
   // Modal states for Quick Actions
   const [activeForm, setActiveForm] = useState(null); // 'create-course' | 'add-intern' | 'add-announcement' | null
 
-  // Phase 5: Loading & Toast States
+  // Phase 5: Loading state
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [toasts, setToasts] = useState([]);
-
-  // Toast stack triggers
-  const addToast = useCallback((type, message) => {
-    const id = Date.now() + Math.random().toString(36).substr(2, 5);
-    setToasts((prev) => [...prev, { id, type, message }]);
-    
-    // Auto dismiss after 4 seconds
-    setTimeout(() => {
-      setToasts((prev) => prev.filter((t) => t.id !== id));
-    }, 4000);
-  }, []);
-
-  const removeToast = useCallback((id) => {
-    setToasts((prev) => prev.filter((t) => t.id !== id));
-  }, []);
 
   // Intercept tab changes with a lightweight transition loader
   const handleTabChange = useCallback((tabId) => {
@@ -57,9 +45,9 @@ function App() {
       
       // Broadcast navigation toast for micro feedback
       const label = tabId === 'showcase' ? 'Core Design Tokens' : 'Administrative Component Catalog';
-      addToast('info', `Navigated to ${label}`);
+      toast.showInfo(`Navigated to ${label}`);
     }, 450);
-  }, [activeTab, addToast]);
+  }, [activeTab, toast]);
 
   // Apply theme class to body
   useEffect(() => {
@@ -75,7 +63,7 @@ function App() {
   const toggleTheme = () => {
     const nextTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(nextTheme);
-    addToast('info', `Switched theme to ${nextTheme.toUpperCase()} mode.`);
+    toast.showInfo(`Switched theme to ${nextTheme.toUpperCase()} mode.`);
   };
 
   const handleActionClick = (variant, duration = '150ms', actionId = null) => {
@@ -92,7 +80,7 @@ function App() {
         message: `Opened form modal: [${actionId.toUpperCase()}]`
       };
       setLogs((prevLogs) => [newLog, ...prevLogs].slice(0, 10));
-      addToast('info', `Opening registration form for: ${actionId.replace('-', ' ')}`);
+      toast.showInfo(`Opening registration form for: ${actionId.replace('-', ' ')}`);
     } else {
       // Standard button log
       const newLog = {
@@ -102,7 +90,7 @@ function App() {
         message: `Action triggered: ${variant.toUpperCase()} button clicked.`
       };
       setLogs((prevLogs) => [newLog, ...prevLogs].slice(0, 10));
-      addToast('success', `${variant.toUpperCase()} action processed.`);
+      toast.showSuccess(`${variant.toUpperCase()} action processed.`);
     }
   };
 
@@ -117,7 +105,7 @@ function App() {
     setLogs((prevLogs) => [newLog, ...prevLogs].slice(0, 10));
     
     // Trigger Success Toast
-    addToast('success', successMessage);
+    toast.showSuccess(successMessage);
     
     // Auto close modal after brief delay
     setTimeout(() => {
@@ -147,15 +135,15 @@ function App() {
         toggleTheme={toggleTheme}
         onActionClick={handleActionClick}
       >
-        {activeTab === 'showcase' && <DesignTokensPage addToast={addToast} />}
+        {activeTab === 'showcase' && <DesignTokensPage />}
         {activeTab === 'catalog' && (
-          <ComponentCatalogPage logs={logs} setLogs={setLogs} addToast={addToast} onOpenForm={setActiveForm} />
+          <ComponentCatalogPage logs={logs} setLogs={setLogs} onOpenForm={setActiveForm} />
         )}
       </DashboardLayout>
 
       {/* Accessible Quick Action Modals */}
       <Modal
-        isOpen={activeForm !== null}
+        open={activeForm !== null}
         onClose={() => setActiveForm(null)}
         title={getModalTitle()}
       >
@@ -174,8 +162,16 @@ function App() {
       <LoadingOverlay isOpen={isTransitioning} message="Loading admin layouts..." />
 
       {/* Phase 5 Stacking Toast Popups */}
-      <Toast toasts={toasts} onClose={removeToast} />
+      <Toast />
     </>
+  );
+}
+
+function App() {
+  return (
+    <NotificationProvider>
+      <AppContent />
+    </NotificationProvider>
   );
 }
 

@@ -89,7 +89,10 @@ The application layout shifts smoothly across device sizes using mobile-first me
 ## 6. Technical Highlights & Outcome
 
 -   **Zero Layout Shift Theme Engine**: The dashboard checks system color-scheme preferences (`matchMedia`) on initial load, caches choices to browser `localStorage`, and binds themes via the `.dark-theme` body class.
--   **Warning-Free Compilation**: The codebase has successfully completed a strict audit review. By eliminating unused dependencies (`useEffect` in catalog page, `React` imports in modern JSX contexts) and resolving `no-useless-assignment` cases, the linter reports zero warnings and zero errors.
+-   **Complete Design System Integration**: Restored and defined missing token properties (`--bg-backdrop`, `--blur-backdrop`, `--bg-*-soft`, `--toast-*-bg`) inside `tokens.css` for both light and dark modes, ensuring complete visual continuity for overlays, row selections, and alerts.
+-   **Mobile Header & Layout Responsiveness**: Improved mobile layout support down to 375px/320px by collapsing demo card grids dynamically (`auto-fit`) and hiding text-labels in the header (theme label and user profile title) so they fit without wrapping.
+-   **Accessibility & Touch Targets**: Added high-contrast keyboard `:focus-visible` rings on the sidebar menu, close buttons, and delete buttons. Ensured a minimum 44px touch target on mobile viewports for all form toggles and action controls.
+-   **Warning-Free Compilation**: The codebase has successfully completed a strict audit review. By eliminating unused dependencies and resolving static warnings, the linter reports zero warnings and zero errors.
 -   **Blazing Fast Builds**: Vite transforms, builds, and minifies the production output in less than **250ms**, producing clean, tree-shaken static assets under `dist/` ready for global CDN publication.
 -   **Robust Form Validation**: Simulated double-entry checks block duplicate email or course registries inside session memory databases, ensuring high-fidelity database mock integrity.
 
