@@ -9,7 +9,7 @@
 .sidebar {
   width: 260px;
   background-color: var(--bg-sidebar);
-  color: var(--neutral-300);
+  color: var(--text-secondary);
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
@@ -27,7 +27,7 @@ body.dark-theme .sidebar {
   padding: 0 var(--space-lg);
   display: flex;
   align-items: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid var(--border-color);
   gap: var(--space-xs);
 }
 
@@ -47,7 +47,7 @@ body.dark-theme .sidebar {
 .brand-name {
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
-  color: #ffffff;
+  color: var(--text-primary);
   letter-spacing: var(--letter-spacing-tight);
 }
 
@@ -60,8 +60,12 @@ body.dark-theme .sidebar {
 .sidebar-nav-item {
   display: flex;
   align-items: center;
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
   padding: var(--space-xs) var(--space-md);
-  color: var(--neutral-400);
+  color: var(--text-secondary);
   border-radius: var(--radius-sm);
   cursor: pointer;
   margin-bottom: var(--space-2xs);
@@ -80,8 +84,8 @@ body.dark-theme .sidebar {
 }
 
 .sidebar-nav-item:hover {
-  background-color: rgba(255, 255, 255, 0.05);
-  color: #ffffff;
+  background-color: var(--action-hover-overlay);
+  color: var(--text-primary);
 }
 
 .sidebar-nav-item:hover i {
@@ -90,24 +94,35 @@ body.dark-theme .sidebar {
 
 .sidebar-nav-item:focus-visible {
   outline: none;
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
-  box-shadow: 0 0 0 2px var(--bg-sidebar), 0 0 0 4px var(--primary-400);
+  background-color: var(--action-active-overlay);
+  color: var(--text-primary);
+  box-shadow: 0 0 0 2px var(--bg-sidebar), 0 0 0 4px var(--border-focus);
 }
 
 .sidebar-nav-item.active {
-  background-color: var(--primary-600);
-  color: #ffffff;
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+  background-color: var(--bg-primary-soft);
+  color: var(--primary-600);
+  border-left: 4px solid var(--primary-500);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-weight: var(--font-weight-semibold);
+  box-shadow: var(--shadow-sm);
 }
 
 .sidebar-nav-item.active i {
-  color: #ffffff;
+  color: var(--primary-500);
+}
+
+body.dark-theme .sidebar-nav-item.active {
+  color: var(--primary-400);
+}
+
+body.dark-theme .sidebar-nav-item.active i {
+  color: var(--primary-400);
 }
 
 .sidebar-footer {
   padding: var(--space-md);
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid var(--border-color);
   font-size: var(--font-size-xs);
   color: var(--neutral-500);
   text-align: center;

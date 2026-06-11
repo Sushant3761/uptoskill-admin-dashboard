@@ -2,7 +2,7 @@
 
 .h1-premium {
   font-size: var(--font-size-4xl);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-medium);
   color: var(--text-primary);
   line-height: var(--line-height-tight);
   letter-spacing: var(--letter-spacing-tight);
@@ -10,7 +10,7 @@
 
 .h2-premium {
   font-size: var(--font-size-3xl);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-medium);
   color: var(--text-primary);
   line-height: var(--line-height-tight);
   letter-spacing: var(--letter-spacing-tight);
@@ -18,14 +18,14 @@
 
 .h3-premium {
   font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-medium);
   color: var(--text-primary);
   line-height: var(--line-height-tight);
 }
 
 .h4-premium {
   font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-medium);
   color: var(--text-primary);
   line-height: var(--line-height-normal);
 }
@@ -39,7 +39,7 @@
 
 .h6-premium {
   font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-medium);
   color: var(--text-tertiary);
   letter-spacing: var(--letter-spacing-wide);
   text-transform: uppercase;
@@ -125,7 +125,7 @@ body.dark-theme .btn:disabled {
 .btn-primary:hover:not(:disabled) {
   background-color: var(--primary-600);
   border-color: var(--primary-700);
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15);
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.15);
 }
 
 .btn-primary:active:not(:disabled) {
@@ -141,7 +141,7 @@ body.dark-theme .btn:disabled {
 .btn-secondary:hover:not(:disabled) {
   background-color: var(--secondary-600);
   border-color: var(--secondary-700);
-  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 181, 165, 0.15);
 }
 
 .btn-secondary:active:not(:disabled) {
@@ -305,7 +305,7 @@ body.dark-theme .btn:disabled {
 
 .input-base:focus:not(:disabled) {
   border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.15);
 }
 
 .input-base:disabled {
@@ -632,7 +632,7 @@ body.dark-theme .toast-warning {
   border-left-color: var(--primary-500);
 }
 body.dark-theme .toast-info {
-  border-color: rgba(99, 102, 241, 0.2);
+  border-color: rgba(255, 107, 53, 0.2);
 }
 
 .toast-close-btn {
@@ -839,7 +839,7 @@ body.dark-theme .toast-info {
 }
 
 body.dark-theme .bulk-action-bar {
-  border-color: rgba(99, 102, 241, 0.2);
+  border-color: rgba(255, 107, 53, 0.2);
 }
 
 .bulk-info-side {
@@ -990,11 +990,11 @@ body.dark-theme .bulk-action-bar {
 }
 
 .selected-row:hover {
-  background-color: rgba(99, 102, 241, 0.16);
+  background-color: rgba(255, 107, 53, 0.16);
 }
 
 body.dark-theme .selected-row:hover {
-  background-color: rgba(99, 102, 241, 0.2);
+  background-color: rgba(255, 107, 53, 0.2);
 }
 
 /* Pagination Section */

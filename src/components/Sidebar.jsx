@@ -17,7 +17,6 @@ const Sidebar = ({ activeTab, setActiveTab, isOpen }) => {
               type="button"
               onClick={() => setActiveTab('showcase')}
               className={`sidebar-nav-item ${activeTab === 'showcase' ? 'active' : ''}`}
-              style={{ width: '100%', background: 'none', border: 'none', textAlign: 'left' }}
               aria-current={activeTab === 'showcase' ? 'page' : undefined}
             >
               <i className="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
@@ -30,7 +29,6 @@ const Sidebar = ({ activeTab, setActiveTab, isOpen }) => {
               type="button"
               onClick={() => setActiveTab('catalog')}
               className={`sidebar-nav-item ${activeTab === 'catalog' ? 'active' : ''}`}
-              style={{ width: '100%', background: 'none', border: 'none', textAlign: 'left' }}
               aria-current={activeTab === 'catalog' ? 'page' : undefined}
             >
               <i className="fa-solid fa-cubes" aria-hidden="true"></i>
